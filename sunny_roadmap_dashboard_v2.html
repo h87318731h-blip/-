@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>整体院Sunny 独立ロードマップ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f3d;
+  --navy2: #1a3258;
+  --blue: #2563eb;
+  --blue-light: #3b82f6;
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --amber: #d97706;
+  --amber-light: #f59e0b;
+  --red: #dc2626;
+  --green: #16a34a;
+  --green-light: #22c55e;
+  --gray: #64748b;
+  --gray-light: #94a3b8;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text2: #475569;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* Header */
+.header { background: var(--navy); padding: 20px 24px 0; }
+.header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.logo { width: 36px; height: 36px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo svg { width: 20px; height: 20px; fill: white; }
+.header-title { font-size: 18px; font-weight: 700; color: white; letter-spacing: -0.02em; }
+.header-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+/* KPI Bar */
+.kpi-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 0; }
+.kpi { background: rgba(255,255,255,0.06); padding: 12px 16px; }
+.kpi-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.kpi-value { font-size: 20px; font-weight: 700; color: white; font-family: 'DM Mono', monospace; line-height: 1; }
+.kpi-sub { font-size: 10px; color: #64748b; margin-top: 3px; }
+
+/* Tabs */
+.tabs { background: var(--navy); padding: 0 24px; display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.tab { padding: 12px 16px; font-size: 13px; font-weight: 500; color: #94a3b8; cursor: pointer; border: none; background: transparent; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
+.tab:hover { color: white; }
+.tab.active { color: var(--teal-light); border-bottom-color: var(--teal-light); }
+
+/* Content */
+.content { padding: 24px; max-width: 960px; margin: 0 auto; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Section */
+.section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; margin-top: 24px; }
+.section-label:first-child { margin-top: 0; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; }
+.card-row { display: flex; align-items: flex-start; gap: 14px; }
+.step-num { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
+.card-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+.tag-teal { background: #ccfbf1; color: #0f766e; }
+.tag-amber { background: #fef3c7; color: #92400e; }
+.tag-blue { background: #dbeafe; color: #1d4ed8; }
+.tag-gray { background: #f1f5f9; color: #475569; }
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+.tag-red { background: #fee2e2; color: #991b1b; }
+
+/* Simulator */
+.sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.control { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.control label { font-size: 12px; color: var(--gray); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.control label span { font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+input[type=range] { width: 100%; accent-color: var(--teal); }
+select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); font-family: 'Noto Sans JP', sans-serif; }
+
+.result-box { background: var(--navy); border-radius: 12px; padding: 20px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.result-item .r-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.result-item .r-value { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; color: white; }
+.r-value.green { color: var(--green-light); }
+.r-value.amber { color: #fbbf24; }
+.r-value.red { color: #f87171; }
+
+.bar-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+.bar-title { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.bar-label { font-size: 12px; color: var(--text2); min-width: 80px; text-align: right; }
+.bar-track { flex: 1; background: var(--bg); border-radius: 4px; height: 22px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; display: flex; align-items: center; padding-left: 8px; }
+.bar-val { font-size: 12px; font-weight: 600; min-width: 90px; font-family: 'DM Mono', monospace; color: var(--text); }
+.goal-note { font-size: 11px; color: var(--teal); margin-top: 8px; }
+
+/* Checklist */
+.check-list { list-style: none; }
+.check-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.check-item:last-child { border-bottom: none; }
+.check-icon { width: 20px; height: 20px; min-width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; font-size: 11px; font-weight: 700; }
+.check-icon.done { background: #dcfce7; color: var(--green); }
+.check-icon.pending { background: #fef3c7; color: var(--amber); }
+.check-icon.todo { background: #fee2e2; color: var(--red); }
+.check-text strong { font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; }
+.check-text small { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* Roadmap */
+.road-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; display: flex; gap: 16px; position: relative; }
+.road-card::before { content: ''; position: absolute; left: 52px; bottom: -10px; width: 2px; height: 10px; background: var(--border); }
+.road-card:last-child::before { display: none; }
+.road-phase { min-width: 70px; }
+.road-period { font-size: 12px; font-weight: 700; font-family: 'DM Mono', monospace; }
+.road-name { font-size: 10px; color: var(--gray); margin-top: 2px; }
+.road-content { flex: 1; }
+.road-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.road-tasks { font-size: 12px; color: var(--text2); line-height: 1.8; }
+.road-kpi { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-top: 8px; }
+
+/* Finance table */
+.fin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fin-table th { background: var(--navy); color: white; padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.fin-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.fin-table tr:nth-child(even) td { background: #f8fafc; }
+.fin-table tr.highlight td { background: #f0fdf4; font-weight: 600; }
+.fin-table tr.total td { background: var(--navy); color: white; font-weight: 700; font-family: 'DM Mono', monospace; }
+.mono { font-family: 'DM Mono', monospace; }
+.text-right { text-align: right; }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-amber { color: var(--amber); }
+
+@media (max-width: 600px) {
+  .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+  .sim-grid { grid-template-columns: 1fr; }
+  .result-box { grid-template-columns: repeat(2, 1fr); }
+  .tabs { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    </div>
+    <div>
+      <div class="header-title">膝痛専門整体院 Sunny</div>
+      <div class="header-sub">独立ロードマップ v2.0 ・ 2026.05.12更新</div>
+    </div>
+  </div>
+  <div class="kpi-bar">
+    <div class="kpi">
+      <div class="kpi-label">独立判断ライン</div>
+      <div class="kpi-value">¥30万</div>
+      <div class="kpi-sub">×2ヶ月連続</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">4月実績</div>
+      <div class="kpi-value">¥272,920</div>
+      <div class="kpi-sub">新規5名</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">YouTube収益</div>
+      <div class="kpi-value">¥12〜15万</div>
+      <div class="kpi-sub">月間・準固定</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">独立判断時期</div>
+      <div class="kpi-value">9〜10月</div>
+      <div class="kpi-sub">3ヶ月データ後</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('ads')">広告準備</button>
+    <button class="tab" onclick="switchTab('sim')">売上シミュレーター</button>
+    <button class="tab" onclick="switchTab('fin')">財務試算</button>
+    <button class="tab" onclick="switchTab('check')">独立チェックリスト</button>
+    <button class="tab" onclick="switchTab('road')">ロードマップ</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- 広告準備 -->
+<div id="panel-ads" class="panel active">
+  <div class="section-label">優先順位別 広告準備タスク</div>
+
+  <div class="card">
+    <div class="card-row">
+      <div class="step-num" style="background:#ccfbf1;color:#0f766e;">1</div>
+      <div>
+        <div class="card-title">Googleビジネスプロフィールの写真追加</div>
+        <div class="card-desc">現在10枚未満。外観・院内・施術中の写真を10枚以上に増やす。口コミ8件☆5と組み合わせてローカル検索の信頼性を高める。</div>
+        <div class="tag-row"><span class="tag tag-teal">今すぐ着手</span><span class="tag tag-gray">無料</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <div class="step-num" style="background:#ccfbf1;color:#0f766e;">2</div>
+      <div>
+        <div class="card-title">LPのメタ情報修正（制作者対応中）</div>
+        <div class="card-desc">「沼津市」→「三島市」・「腰痛」削除・タイトルに「三島市」追加。Googleがこの情報を読んで検索順位に影響するため最優先。</div>
+        <div class="tag-row"><span class="tag tag-teal">対応中</span><span class="tag tag-gray">無料</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <div class="step-num" style="background:#fef3c7;color:#92400e;">3</div>
+      <div>
+        <div class="card-title">チラシ印刷入稿（補助金採択後すぐ）</div>
+        <div class="card-desc">A・Bチラシデザイン確定済み。患者写真の差し替えのみ残り。補助金採択（6月）次第、即入稿。7月第1週配布に向けて6月中旬までに完了させる。</div>
+        <div class="tag-row"><span class="tag tag-amber">6月採択後すぐ</span><span class="tag tag-blue">45,000部・約¥9.5万</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <div class="step-num" style="background:#fef3c7;color:#92400e;">4</div>
+      <div>
+        <div class="card-title">Google広告アカウント開設・キャンペーン設定</div>
+        <div class="card-desc">エキスパートモードで開設中。キーワード設定・LP遷移・予算設定を完了させる。7月1日スタートに向けて6月中に設定完了。月予算¥85,000。</div>
+        <div class="tag-row"><span class="tag tag-amber">6月中に完了</span><span class="tag tag-blue">月予算¥85,000</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <div class="step-num" style="background:#ede9fe;color:#6d28d9;">5</div>
+      <div>
+        <div class="card-title">ポスティング発注（MISH・久保田さん）</div>
+        <div class="card-desc">Aエリア4,840枚・Bエリア4,970枚で確定。事前確認メール送信済み。補助金採択日以降の発注書日付で7月第1週配布を依頼。</div>
+        <div class="tag-row"><span class="tag tag-purple">6月採択後すぐ</span><span class="tag tag-blue">月9,810枚×複数回</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">ポスティングエリア確定版</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px;">Aエリア：4,840枚</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.8;">1025 下土狩・中土狩（360）<br>1026 下土狩・竹原・清水町新宿（430）<br>1028 下土狩（430）<br>1032 下土狩・本宿・竹原（490）<br>1031 下土狩・竹原（480）<br>3093 西若町・栄町・寿町・泉町（530）<br>3089 西本町・広小路周辺（480）<br>1013 清水町新宿・玉川・伏見（540）<br>3091 加屋・清住町・緑町・南町（520）<br>1005 清水町柿田・玉川・伏見（580）</div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:8px;">Bエリア：4,970枚</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.8;">1030 下土狩・中土狩（590）<br>2077 幸原町・文教町（580）<br>2042 徳倉2丁目・壱町田（540）<br>2052 若松町・光ヶ丘・東壱町田（410）<br>3094 一番町・芝本町・中央町（590）<br>2074 川原ヶ谷・加茂川町（400）<br>3079 大宮町・大社町・日の出町（480）<br>3081 北田町・中央町・中田町（460）<br>2072 東町・東本町（450）<br>2065 東本町・青木・南二日町（470）</div>
+    </div>
+  </div>
+</div>
+
+<!-- シミュレーター -->
+<div id="panel-sim" class="panel">
+  <div class="section-label">条件を設定</div>
+  <div class="sim-grid">
+    <div class="control">
+      <label>稼働日数 <span id="days-val">3日/週</span></label>
+      <input type="range" min="2" max="6" value="3" id="sl-days" oninput="updateSim()">
+    </div>
+    <div class="control">
+      <label>稼働率 <span id="rate-val">70%</span></label>
+      <input type="range" min="30" max="100" value="70" step="10" id="sl-rate" oninput="updateSim()">
+    </div>
+    <div class="control">
+      <label>主力メニュー <span></span></label>
+      <select id="sl-menu" onchange="updateSim()">
+        <option value="85000">竹10回券（¥85,000）</option>
+        <option value="100000">松12回券（¥100,000）</option>
+        <option value="57000">梅6回券（¥57,000）</option>
+      </select>
+    </div>
+    <div class="control">
+      <label>継続患者数 <span id="grad-val">5人</span></label>
+      <input type="range" min="0" max="20" value="5" id="sl-grad" oninput="updateSim()">
+    </div>
+  </div>
+
+  <div class="result-box">
+    <div class="result-item"><div class="r-label">月間消化枠</div><div class="r-value" id="r-slots">—</div></div>
+    <div class="result-item"><div class="r-label">新患売上</div><div class="r-value" id="r-new">—</div></div>
+    <div class="result-item"><div class="r-label">継続患者売上</div><div class="r-value" id="r-grad">—</div></div>
+    <div class="result-item"><div class="r-label">月間合計</div><div class="r-value" id="r-total">—</div></div>
+    <div class="result-item"><div class="r-label">判断ライン</div><div class="r-value" id="r-judge">—</div></div>
+  </div>
+
+  <div class="bar-section">
+    <div class="bar-title">目標ライン比較</div>
+    <div class="bar-row">
+      <div class="bar-label">4月実績</div>
+      <div class="bar-track"><div class="bar-fill" style="background:#94a3b8;width:54.6%"></div></div>
+      <div class="bar-val mono">¥272,920</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">シミュレーション</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-sim" style="background:#0d9488;width:0%"></div></div>
+      <div class="bar-val mono" id="bar-sim-val">—</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">独立判断ライン</div>
+      <div class="bar-track"><div class="bar-fill" style="background:#2563eb;width:60%"></div></div>
+      <div class="bar-val mono">¥300,000</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">安定ライン</div>
+      <div class="bar-track"><div class="bar-fill" style="background:#16a34a;width:100%"></div></div>
+      <div class="bar-val mono">¥500,000</div>
+    </div>
+    <div class="goal-note">▲ 独立判断：整体院売上¥30万×2ヶ月連続 ／ YouTube収益¥12〜15万は別途</div>
+  </div>
+</div>
+
+<!-- 財務試算 -->
+<div id="panel-fin" class="panel">
+  <div class="section-label">独立判断ライン時の月間収支（整体院売上¥30万）</div>
+  <table class="fin-table">
+    <tr><th>項目</th><th class="text-right">年額</th><th class="text-right">月換算</th></tr>
+    <tr><td>整体院売上</td><td class="text-right mono text-green">¥3,600,000</td><td class="text-right mono text-green">¥300,000</td></tr>
+    <tr><td>YouTube収益</td><td class="text-right mono text-green">¥1,620,000</td><td class="text-right mono text-green">¥135,000</td></tr>
+    <tr class="highlight"><td>総収入</td><td class="text-right mono">¥5,220,000</td><td class="text-right mono">¥435,000</td></tr>
+    <tr><td>院の固定費（家賃・Wi-Fi・Claude・Gemini等）</td><td class="text-right mono text-red">▲¥801,000</td><td class="text-right mono text-red">▲¥66,750</td></tr>
+    <tr><td>国民健康保険料</td><td class="text-right mono text-red">▲¥420,000</td><td class="text-right mono text-red">▲¥35,000</td></tr>
+    <tr><td>国民年金保険料</td><td class="text-right mono text-red">▲¥203,760</td><td class="text-right mono text-red">▲¥16,980</td></tr>
+    <tr><td>所得税（税率10%・課税所得¥266万）</td><td class="text-right mono text-red">▲¥172,574</td><td class="text-right mono text-red">▲¥14,381</td></tr>
+    <tr><td>復興特別所得税</td><td class="text-right mono text-red">▲¥3,550</td><td class="text-right mono text-red">▲¥296</td></tr>
+    <tr><td>住民税</td><td class="text-right mono text-red">▲¥271,524</td><td class="text-right mono text-red">▲¥22,627</td></tr>
+    <tr><td>個人事業税</td><td class="text-right mono">¥0</td><td class="text-right mono">¥0</td></tr>
+    <tr class="total"><td>月間手残り</td><td class="text-right mono">¥3,351,142</td><td class="text-right mono">約¥279,000</td></tr>
+  </table>
+  <div style="font-size:11px;color:var(--gray);margin-top:8px;padding:0 4px;">※個人事業税は整体院事業所得が¥290万以下のため非課税　※生活費は含まず（現状と同水準）</div>
+
+  <div class="section-label">継続患者数別 必要新規患者数（竹プラン成約率1/2）</div>
+  <table class="fin-table">
+    <tr><th>継続患者数</th><th class="text-right">継続売上</th><th class="text-right">必要新規患者数</th><th class="text-right">合計売上</th></tr>
+    <tr><td>5人</td><td class="text-right mono">¥140,250</td><td class="text-right mono text-amber">約3人</td><td class="text-right mono">¥265,000</td></tr>
+    <tr><td>8人</td><td class="text-right mono">¥224,400</td><td class="text-right mono text-amber">約1人</td><td class="text-right mono">¥265,000</td></tr>
+    <tr class="highlight"><td>10人以上</td><td class="text-right mono">¥280,500〜</td><td class="text-right mono text-green">0人（達成）</td><td class="text-right mono text-green">¥280,500〜</td></tr>
+  </table>
+
+  <div class="section-label">将来の節税スキーム</div>
+  <table class="fin-table">
+    <tr><th>制度</th><th>内容</th><th>導入時期</th></tr>
+    <tr><td>青色申告特別控除</td><td>年間¥65万控除</td><td class="text-green">独立後すぐ</td></tr>
+    <tr><td>小規模企業共済</td><td>月¥7万（年¥84万）</td><td>将来的に導入</td></tr>
+    <tr><td>iDeCo</td><td>月¥6.8万（年¥81.6万）</td><td>将来的に導入</td></tr>
+    <tr><td>YouTubeマイクロ法人化</td><td>社会保険料最適化・役員報酬月¥7〜8万設定</td><td class="text-amber">整体院¥50万超で検討</td></tr>
+  </table>
+</div>
+
+<!-- チェックリスト -->
+<div id="panel-check" class="panel">
+  <div class="section-label">財務条件（全5項目クリアが必須）</div>
+  <div class="card">
+    <ul class="check-list">
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>整体院売上¥30万を2ヶ月連続達成</strong><small>単月ではなく連続2ヶ月で確認。YouTube¥12〜15万と合わせて月¥42〜45万の収入水準</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>竹プラン（¥85,000）月3人以上成約</strong><small>新規集客6〜10人のうち1/2が成約する想定。継続患者の積み上げにつながる</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>継続患者数10人以上</strong><small>継続患者10人で月¥280,500のストック収入。新規ゼロでも独立ラインを超える安定基盤</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>新規患者が月6〜10人ペースで安定</strong><small>4月実績5人（広告なし）。7月広告投入後に達成が見込まれる</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon done">✓</div>
+        <div class="check-text"><strong>生活防衛資金¥300万確保</strong><small>達成済み。運転資金¥100万・生活費¥200万に分けて管理推奨</small></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-label">集客・運営条件（3項目以上クリア）</div>
+  <div class="card">
+    <ul class="check-list">
+      <li class="check-item">
+        <div class="check-icon todo">✗</div>
+        <div class="check-text"><strong>Google広告のROI確認済み</strong><small>広告費¥1万→新規1名以上が目安。7月開始後1〜2ヶ月のデータで判断</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>Googleクチコミ10件以上</strong><small>現在8件（全て☆5）。4月からの患者に依頼中。10件達成見込み</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon pending">△</div>
+        <div class="check-text"><strong>予約・顧客管理の仕組みが整っている</strong><small>LINE公式アカウント設定済み。カルテ管理は要整備</small></div>
+      </li>
+      <li class="check-item">
+        <div class="check-icon todo">✗</div>
+        <div class="check-text"><strong>健康保険切り替え準備済み</strong><small>独立月の翌月から国民健康保険に切り替え。保険料は月約¥31,400（32歳・前年所得ベース）</small></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-label">判断基準まとめ</div>
+  <div class="card" style="border-color:var(--teal);background:#f0fdfa;">
+    <div style="font-size:13px;color:#0f766e;font-weight:600;margin-bottom:6px;">独立GO の条件</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7;">財務条件5項目すべて＋集客条件3項目以上を満たした時点が独立の目安。<br>広告開始（7月）から3ヶ月後の<strong>9〜10月に最終判断</strong>。条件達成なら11月退職が現実的なタイムライン。</div>
+  </div>
+</div>
+
+<!-- ロードマップ -->
+<div id="panel-road" class="panel">
+  <div class="section-label">独立までのタイムライン</div>
+
+  <div class="road-card">
+    <div class="road-phase">
+      <div class="road-period" style="color:var(--teal);">5〜6月</div>
+      <div class="road-name">準備期</div>
+    </div>
+    <div class="road-content">
+      <div class="road-title">広告インフラ整備フェーズ</div>
+      <div class="road-tasks">・Googleビジネス写真10枚以上に増やす<br>・LPメタ情報修正（制作者対応中）<br>・チラシA/B最終入稿（患者写真差し替え後）<br>・Google広告アカウント設定完了<br>・補助金採否確認（6月）→採択次第即発注</div>
+      <span class="road-kpi" style="background:#ccfbf1;color:#0f766e;">KPI：印刷入稿・広告設定完了</span>
+    </div>
+  </div>
+
+  <div class="road-card">
+    <div class="road-phase">
+      <div class="road-period" style="color:var(--amber);">7〜8月</div>
+      <div class="road-name">検証期</div>
+    </div>
+    <div class="road-content">
+      <div class="road-title">集客テスト＆データ収集フェーズ</div>
+      <div class="road-tasks">・ポスティング第1弾（A:4,840枚 B:4,970枚）<br>・Google検索広告スタート（月¥85,000）<br>・QRコードA/B別で反響率を計測<br>・Googleクチコミ10件達成<br>・竹プラン成約率・継続患者数を記録</div>
+      <span class="road-kpi" style="background:#fef3c7;color:#92400e;">KPI：新規月6〜10人・竹プラン月3人成約</span>
+    </div>
+  </div>
+
+  <div class="road-card">
+    <div class="road-phase">
+      <div class="road-period" style="color:var(--blue);">9〜10月</div>
+      <div class="road-name">判断期</div>
+    </div>
+    <div class="road-content">
+      <div class="road-title">独立判断フェーズ</div>
+      <div class="road-tasks">・3ヶ月の集客・売上データを分析<br>・整体院売上¥30万×2ヶ月連続の達成確認<br>・チェックリスト全項目の最終確認<br>・独立後の事務手続き（健康保険・年金）の確認</div>
+      <span class="road-kpi" style="background:#dbeafe;color:#1d4ed8;">KPI：整体院¥30万×2ヶ月連続</span>
+    </div>
+  </div>
+
+  <div class="road-card">
+    <div class="road-phase">
+      <div class="road-period" style="color:var(--green);">11月〜</div>
+      <div class="road-name">独立期</div>
+    </div>
+    <div class="road-content">
+      <div class="road-title">本格独立フェーズ</div>
+      <div class="road-tasks">・訪問看護ステーションを退職<br>・週5日稼働へ拡大<br>・青色申告体制を確立<br>・ポスティング・広告の継続投下</div>
+      <span class="road-kpi" style="background:#dcfce7;color:#16a34a;">KPI：整体院¥50万＋YouTube¥12〜15万</span>
+    </div>
+  </div>
+
+  <div class="road-card">
+    <div class="road-phase">
+      <div class="road-period" style="color:var(--gray);">独立2〜3年後</div>
+      <div class="road-name">最適化期</div>
+    </div>
+    <div class="road-content">
+      <div class="road-title">税務最適化フェーズ</div>
+      <div class="road-tasks">・小規模企業共済・iDeCoを導入<br>・整体院売上¥50万超を確認後、税理士に相談<br>・YouTubeマイクロ法人化を検討（社会保険料最適化）<br>・課税所得¥330万以内での手残り最大化</div>
+      <span class="road-kpi" style="background:#f1f5f9;color:#475569;">KPI：整体院¥50万以上で法人化検討</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  tabs.forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function updateSim() {
+  const days = parseInt(document.getElementById('sl-days').value);
+  const rate = parseInt(document.getElementById('sl-rate').value);
+  const menuPrice = parseInt(document.getElementById('sl-menu').value);
+  const grads = parseInt(document.getElementById('sl-grad').value);
+
+  document.getElementById('days-val').textContent = days + '日/週';
+  document.getElementById('rate-val').textContent = rate + '%';
+  document.getElementById('grad-val').textContent = grads + '人';
+
+  const totalSlots = Math.round(days * 4.33 * 7);
+  const activeSlots = Math.round(totalSlots * rate / 100);
+  const gradSlots = Math.min(grads * 3, Math.round(activeSlots * 0.4));
+  const newSlots = activeSlots - gradSlots;
+
+  // 新患：成約率1/2（竹プラン or 初回のみ）
+  const unitPrice = menuPrice === 85000 ? 8500 : menuPrice === 100000 ? 8333 : 9500;
+  const newRevenue = newSlots * (0.5 * unitPrice * 3 + 0.5 * 4980 / newSlots * newSlots);
+  const newRev = Math.round(newSlots * (0.5 * unitPrice * 3.3 + 0.5 * 4980));
+  const gradRev = grads * 8500 * 3.3;
+  const total = Math.round(newRev + gradRev);
+  const goal = 300000;
+
+  document.getElementById('r-slots').textContent = activeSlots + '枠';
+  document.getElementById('r-new').textContent = '¥' + newRev.toLocaleString();
+  document.getElementById('r-grad').textContent = '¥' + Math.round(gradRev).toLocaleString();
+
+  const totalEl = document.getElementById('r-total');
+  totalEl.textContent = '¥' + total.toLocaleString();
+  totalEl.className = 'r-value ' + (total >= goal ? 'green' : total >= goal * 0.8 ? 'amber' : 'red');
+
+  const judgeEl = document.getElementById('r-judge');
+  if (total >= goal) { judgeEl.textContent = '✓ 達成'; judgeEl.className = 'r-value green'; }
+  else if (total >= goal * 0.8) { judgeEl.textContent = '△ あと少し'; judgeEl.className = 'r-value amber'; }
+  else { judgeEl.textContent = '✗ 未達'; judgeEl.className = 'r-value red'; }
+
+  const maxBar = 500000;
+  const pct = Math.min(total / maxBar * 100, 100);
+  document.getElementById('bar-sim').style.width = pct + '%';
+  document.getElementById('bar-sim-val').textContent = '¥' + total.toLocaleString();
+}
+updateSim();
+</script>
+</body>
+</html>
