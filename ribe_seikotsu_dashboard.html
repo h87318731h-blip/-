@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リベ整体院 独立ロードマップ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #0f2040;
+    --navy-light: #162b52;
+    --teal: #00c9b1;
+    --teal-dark: #00a896;
+    --teal-light: #4dfde8;
+    --teal-glow: rgba(0,201,177,0.15);
+    --slate: #1e3a5f;
+    --slate-light: #2a4d78;
+    --text-primary: #e8f4f8;
+    --text-secondary: #8ab4cc;
+    --text-muted: #4a7090;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --gold: #f1c40f;
+    --border: rgba(0,201,177,0.2);
+    --card-bg: rgba(15,32,64,0.7);
+    --glass: rgba(255,255,255,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--navy);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(0,201,177,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,168,150,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(10,22,40,0.8) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: relative;
+    z-index: 10;
+    padding: 28px 40px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .header-left { display: flex; flex-direction: column; gap: 4px; }
+
+  .clinic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    background: var(--teal-glow);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    width: fit-content;
+    margin-bottom: 8px;
+  }
+
+  .clinic-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #e8f4f8 0%, var(--teal-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .clinic-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+  }
+
+  .stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 18px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 90px;
+  }
+
+  .stat-pill .val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  .stat-pill .lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── TABS ── */
+  .tab-nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 22px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+    position: relative;
+    top: 1px;
+  }
+
+  .tab-btn:hover { color: var(--text-secondary); }
+
+  .tab-btn.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+    background: linear-gradient(to bottom, transparent, rgba(0,201,177,0.05));
+  }
+
+  .tab-icon { font-size: 16px; }
+
+  /* ── CONTENT ── */
+  .tab-content {
+    position: relative;
+    z-index: 10;
+    display: none;
+    padding: 32px 40px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .tab-content.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--teal);
+    border-radius: 2px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* ── TAB1: 広告準備 ── */
+  .priority-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .p1 { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+  .p2 { background: rgba(243,156,18,0.15); color: #f39c12; border: 1px solid rgba(243,156,18,0.3); }
+  .p3 { background: rgba(0,201,177,0.15); color: var(--teal); border: 1px solid var(--border); }
+
+  .task-channel {
+    margin-bottom: 28px;
+  }
+
+  .channel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .channel-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .channel-budget {
+    margin-left: auto;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .task-item:hover { border-color: var(--border); background: rgba(0,201,177,0.05); }
+
+  .task-check {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--text-muted);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .task-item.done .task-check {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+
+  .task-item.done .task-check::after {
+    content: '✓';
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .task-item.done .task-text { text-decoration: line-through; color: var(--text-muted); }
+
+  .task-right { flex: 1; }
+  .task-text { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+  .task-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  .task-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
+  /* ── TAB2: シミュレーター ── */
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 24px;
+  }
+
+  .slider-group { margin-bottom: 22px; }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .slider-label span:first-child { font-size: 13px; color: var(--text-secondary); }
+
+  .slider-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--slate);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--teal);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(0,201,177,0.5);
+    transition: transform 0.15s;
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .result-display {
+    text-align: center;
+    padding: 32px 20px;
+    background: linear-gradient(135deg, rgba(0,201,177,0.08) 0%, rgba(0,168,150,0.04) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 24px;
+  }
+
+  .result-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .result-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--teal-light) 0%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 8px 0;
+    line-height: 1;
+  }
+
+  .result-sub { font-size: 12px; color: var(--text-secondary); }
+
+  .bar-chart { margin-top: 8px; }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .bar-label { font-size: 12px; color: var(--text-secondary); width: 90px; flex-shrink: 0; text-align: right; }
+
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--slate);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+
+  .bar-fill span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .bar-current .bar-fill { background: linear-gradient(90deg, var(--teal-dark), var(--teal)); }
+  .bar-target .bar-fill { background: linear-gradient(90deg, #e67e22, #f39c12); }
+  .bar-goal .bar-fill { background: linear-gradient(90deg, #27ae60, var(--success)); }
+
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .breakdown-item {
+    padding: 12px;
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .breakdown-item .b-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .breakdown-item .b-lbl { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── TAB3: 財務試算 ── */
+  .finance-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .finance-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .finance-table td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .finance-table tr:hover td { background: var(--glass); }
+
+  .finance-table .income { color: var(--success); font-weight: 500; }
+  .finance-table .expense { color: #e74c3c; font-weight: 500; }
+  .finance-table .subtotal td {
+    background: rgba(0,201,177,0.05);
+    font-weight: 700;
+    color: var(--teal);
+    border-top: 1px solid var(--border);
+  }
+
+  .finance-table .total td {
+    background: linear-gradient(90deg, rgba(0,201,177,0.1), rgba(0,201,177,0.05));
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--teal-light);
+    border-top: 2px solid var(--teal);
+  }
+
+  .patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .patient-table th {
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .patient-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .patient-table tr:hover td { background: var(--glass); }
+
+  .patient-table td:first-child { text-align: left; color: var(--text-primary); font-weight: 500; }
+
+  .highlight-row td { color: var(--teal) !important; font-weight: 700 !important; background: rgba(0,201,177,0.07) !important; }
+
+  /* ── TAB4: チェックリスト ── */
+  .check-section { margin-bottom: 28px; }
+
+  .check-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .check-items { display: flex; flex-direction: column; gap: 10px; }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid;
+  }
+
+  .check-item.done {
+    background: rgba(46,204,113,0.05);
+    border-color: rgba(46,204,113,0.2);
+  }
+
+  .check-item.progress {
+    background: rgba(243,156,18,0.05);
+    border-color: rgba(243,156,18,0.2);
+  }
+
+  .check-item.todo {
+    background: rgba(231,76,60,0.04);
+    border-color: rgba(231,76,60,0.15);
+  }
+
+  .check-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .check-item.done .check-icon { background: rgba(46,204,113,0.15); color: var(--success); }
+  .check-item.progress .check-icon { background: rgba(243,156,18,0.15); color: var(--warning); }
+  .check-item.todo .check-icon { background: rgba(231,76,60,0.1); color: var(--danger); }
+
+  .check-text { flex: 1; }
+  .check-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .check-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  .check-badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .check-item.done .check-badge { background: rgba(46,204,113,0.2); color: var(--success); }
+  .check-item.progress .check-badge { background: rgba(243,156,18,0.2); color: var(--warning); }
+  .check-item.todo .check-badge { background: rgba(231,76,60,0.15); color: var(--danger); }
+
+  .check-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .check-sum-item {
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid;
+  }
+
+  .check-sum-item.s-done { background: rgba(46,204,113,0.05); border-color: rgba(46,204,113,0.2); }
+  .check-sum-item.s-prog { background: rgba(243,156,18,0.05); border-color: rgba(243,156,18,0.2); }
+  .check-sum-item.s-todo { background: rgba(231,76,60,0.04); border-color: rgba(231,76,60,0.15); }
+
+  .check-sum-item .num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+  }
+
+  .check-sum-item.s-done .num { color: var(--success); }
+  .check-sum-item.s-prog .num { color: var(--warning); }
+  .check-sum-item.s-todo .num { color: var(--danger); }
+
+  .check-sum-item .lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── TAB5: ロードマップ ── */
+  .timeline { position: relative; padding-left: 0; }
+
+  .timeline-phases {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .timeline-phases::before {
+    content: '';
+    position: absolute;
+    top: 34px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-dark), var(--slate-light));
+    z-index: 1;
+  }
+
+  .phase-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .phase-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid;
+    background: var(--navy);
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .phase-dot.current {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 6px rgba(0,201,177,0.15), 0 0 20px rgba(0,201,177,0.4);
+  }
+
+  .phase-dot.done { border-color: var(--success); background: var(--success); }
+
+  .phase-dot.upcoming { border-color: var(--text-muted); }
+
+  .phase-dot::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--teal);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .phase-dot.done::after { background: var(--navy); }
+  .phase-dot.upcoming::after { display: none; }
+
+  .phase-card {
+    width: 100%;
+    padding: 18px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .phase-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+
+  .phase-card.current-phase {
+    border-color: var(--teal);
+    background: linear-gradient(135deg, rgba(0,201,177,0.1), rgba(0,201,177,0.04));
+    box-shadow: 0 0 30px rgba(0,201,177,0.1);
+  }
+
+  .phase-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .phase-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .phase-period {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .kpi-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .kpi-item {
+    padding: 8px 10px;
+    background: var(--glass);
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  .kpi-label { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+  .kpi-value { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+  .phase-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .status-current { background: rgba(0,201,177,0.15); color: var(--teal); }
+  .status-done { background: rgba(46,204,113,0.15); color: var(--success); }
+  .status-upcoming { background: rgba(100,120,150,0.15); color: var(--text-muted); }
+
+  /* Progress bar for roadmap */
+  .roadmap-progress {
+    margin: 32px 0;
+    padding: 20px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+
+  .prog-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .prog-track {
+    height: 8px;
+    background: var(--slate);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal-dark), var(--teal-light));
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .milestone-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .milestone-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .milestone-dot span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
+  .milestone-dot.reached span { background: var(--teal); }
+  .milestone-dot.reached { color: var(--teal); }
+
+  /* Tooltip helper */
+  .tooltip-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .header { padding: 20px 20px 0; flex-direction: column; align-items: flex-start; }
+    .header-stats { flex-wrap: wrap; padding-bottom: 16px; }
+    .tab-content { padding: 20px; }
+    .sim-grid { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .timeline-phases { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .timeline-phases::before { display: none; }
+    .check-summary { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="clinic-badge">🏥 独立ロードマップ</div>
+    <div class="clinic-name">リベ整体院</div>
+    <div class="clinic-sub">静岡県浜松市 ｜ 腰痛・肩こり専門 ｜ 週3日稼働（副業）</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill"><div class="val">¥28万</div><div class="lbl">現在の月売上</div></div>
+    <div class="stat-pill"><div class="val">12人</div><div class="lbl">月間新規</div></div>
+    <div class="stat-pill"><div class="val">31件</div><div class="lbl">Googleクチコミ</div></div>
+    <div class="stat-pill"><div class="val">☆4.8</div><div class="lbl">平均評価</div></div>
+    <div class="stat-pill"><div class="val">2026/3</div><div class="lbl">独立希望</div></div>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('tab1', this)"><span class="tab-icon">📣</span>広告準備</button>
+  <button class="tab-btn" onclick="switchTab('tab2', this)"><span class="tab-icon">📊</span>売上シミュレーター</button>
+  <button class="tab-btn" onclick="switchTab('tab3', this)"><span class="tab-icon">💴</span>財務試算</button>
+  <button class="tab-btn" onclick="switchTab('tab4', this)"><span class="tab-icon">✅</span>独立チェックリスト</button>
+  <button class="tab-btn" onclick="switchTab('tab5', this)"><span class="tab-icon">🗺️</span>ロードマップ</button>
+</div>
+
+<!-- ═══════════════ TAB1: 広告準備 ═══════════════ -->
+<div id="tab1" class="tab-content active">
+  <div class="grid-2">
+    <div>
+      <div class="task-channel">
+        <div class="channel-header">
+          <div>🔍</div>
+          <div class="channel-name">Google MEO最適化</div>
+          <span class="priority-badge p1">優先度 HIGH</span>
+          <div class="channel-budget">¥0〜3,000/月</div>
+        </div>
+        <div class="task-list">
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p1">P1</span></div>
+              <div class="task-text">Googleビジネスプロフィールの情報を完全に埋める（営業時間・写真20枚以上・サービス説明）</div>
+              <div class="task-meta">目標：プロフィール完成度100%</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p1">P1</span></div>
+              <div class="task-text">クチコミ返信テンプレートを作成し、全クチコミに48時間以内に返信する</div>
+              <div class="task-meta">現在31件→目標50件</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p2">P2</span></div>
+              <div class="task-text">来院後のクチコミ依頼フローを確立（LINE or カード配布）</div>
+              <div class="task-meta">月3〜5件の新規クチコミ獲得を目標</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p2">P2</span></div>
+              <div class="task-text">Googleビジネスの投稿機能を週1回更新（施術事例・季節の症状）</div>
+              <div class="task-meta">検索表示順位向上に直結</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-channel">
+        <div class="channel-header">
+          <div>📸</div>
+          <div class="channel-name">Instagram運用</div>
+          <span class="priority-badge p2">優先度 MID</span>
+          <div class="channel-budget">¥0〜5,000/月</div>
+        </div>
+        <div class="task-list">
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p1">P1</span></div>
+              <div class="task-text">プロフィール最適化：腰痛・肩こり専門をキーワードに入れ、予約リンクを設置</div>
+              <div class="task-meta">Linktree or 予約システムURL</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p2">P2</span></div>
+              <div class="task-text">週3投稿を習慣化：Before/After・症状解説Reels・施術ノウハウ</div>
+              <div class="task-meta">投稿カレンダーを先月分まで作成</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p3">P3</span></div>
+              <div class="task-text">地域ハッシュタグ（#浜松整体 #浜松腰痛 等）を各投稿に5〜10個設定</div>
+              <div class="task-meta">地域密着フォロワー獲得</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="task-channel">
+        <div class="channel-header">
+          <div>🎯</div>
+          <div class="channel-name">Google広告（LSA/検索広告）</div>
+          <span class="priority-badge p1">優先度 HIGH</span>
+          <div class="channel-budget">月¥30,000予算</div>
+        </div>
+        <div class="task-list">
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p1">P1</span></div>
+              <div class="task-text">Google広告アカウントを開設し、「浜松 腰痛 整体」系キーワードで検索広告を設定</div>
+              <div class="task-meta">開始目標：2025年11月</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p1">P1</span></div>
+              <div class="task-text">ランディングページ（LP）を専用で作成：初回特典・症例実績・料金を明記</div>
+              <div class="task-meta">CVR目標：3〜5%</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p2">P2</span></div>
+              <div class="task-text">コンバージョントラッキングを設定し、CPA（顧客獲得単価）を月次で確認</div>
+              <div class="task-meta">目標CPA：¥3,000以下</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p3">P3</span></div>
+              <div class="task-text">Googleローカルサービス広告（LSA）の申請を完了する</div>
+              <div class="task-meta">バッジ取得で信頼性向上</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-channel">
+        <div class="channel-header">
+          <div>📄</div>
+          <div class="channel-name">ポスティング・地域施策</div>
+          <span class="priority-badge p3">優先度 LOW</span>
+          <div class="channel-budget">月¥10,000〜</div>
+        </div>
+        <div class="task-list">
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p2">P2</span></div>
+              <div class="task-text">院から半径1.5km以内の住宅地にA4チラシを2,000枚ポスティング</div>
+              <div class="task-meta">QRコード付き初回¥1,000オフクーポン掲載</div>
+            </div>
+          </div>
+          <div class="task-item" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-right">
+              <div class="task-header"><span class="priority-badge p3">P3</span></div>
+              <div class="task-text">近隣のジム・美容院・ドラッグストアと名刺交換し、相互紹介関係を構築</div>
+              <div class="task-meta">3店舗以上との関係構築を目標</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB2: 売上シミュレーター ═══════════════ -->
+<div id="tab2" class="tab-content">
+  <div class="sim-grid">
+    <div class="card">
+      <div class="card-title">パラメータ設定</div>
+
+      <!-- 料金表示 -->
+      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:8px; margin-bottom:22px;">
+        <div style="padding:10px; background:var(--glass); border:1px solid var(--border); border-radius:10px; text-align:center;">
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px;">初回料金</div>
+          <div style="font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--teal);">¥2,980</div>
+        </div>
+        <div style="padding:10px; background:var(--glass); border:1px solid var(--border); border-radius:10px; text-align:center;">
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px;">回数券（10回）</div>
+          <div style="font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--teal);">¥60,000</div>
+        </div>
+        <div style="padding:10px; background:var(--glass); border:1px solid var(--border); border-radius:10px; text-align:center;">
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:3px;">都度払い</div>
+          <div style="font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--teal);">¥7,000</div>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>月間稼働日数</span>
+          <span class="slider-val" id="v-days">12日</span>
+        </div>
+        <input type="range" id="s-days" min="1" max="26" value="12" oninput="updateSim()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>初回集客数（¥2,980 × n人）</span>
+          <span class="slider-val" id="v-shokai">8人</span>
+        </div>
+        <input type="range" id="s-shokai" min="0" max="60" value="8" oninput="updateSim()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>回数券契約人数（¥60,000 × n人）</span>
+          <span class="slider-val" id="v-ticket">5人</span>
+        </div>
+        <input type="range" id="s-ticket" min="0" max="40" value="5" oninput="updateSim()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>都度払い人数（¥7,000 × n人）</span>
+          <span class="slider-val" id="v-ittoku">10人</span>
+        </div>
+        <input type="range" id="s-ittoku" min="0" max="80" value="10" oninput="updateSim()">
+      </div>
+
+      <div class="breakdown-grid">
+        <div class="breakdown-item">
+          <div class="b-val" id="b-total-patients">—</div>
+          <div class="b-lbl">月間総来院人数</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="b-val" id="b-days">—</div>
+          <div class="b-lbl">稼働日数</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="b-val" id="b-avg">—</div>
+          <div class="b-lbl">平均客単価</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="result-display">
+        <div class="result-label">シミュレーション 月間売上</div>
+        <div class="result-value" id="sim-result">¥—</div>
+        <div class="result-sub" id="sim-diff">独立判断ライン（¥40万）まで —</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">目標ライン比較</div>
+        <div class="bar-chart">
+          <div class="bar-row bar-current">
+            <div class="bar-label">現在実績</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:46.7%"><span>¥28万</span></div>
+            </div>
+          </div>
+          <div class="bar-row bar-target">
+            <div class="bar-label">シミュレーション</div>
+            <div class="bar-track">
+              <div class="bar-fill" id="bar-sim" style="width:46.7%"><span id="bar-sim-label">¥28万</span></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">独立判断ライン</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:66.7%; background: linear-gradient(90deg, #e67e22, #f1c40f)"><span>¥40万</span></div>
+            </div>
+          </div>
+          <div class="bar-row bar-goal">
+            <div class="bar-label">安定目標</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%"><span>¥60万</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="tooltip-hint">※ バーは安定目標¥60万を100%として表示しています</p>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title">収入内訳（シミュレーション）</div>
+        <table class="finance-table" style="font-size:12px;">
+          <tr>
+            <td>初回集客売上</td>
+            <td style="text-align:right; font-size:11px; color:var(--text-muted);" id="sim-shokai-detail">—</td>
+            <td class="income" id="sim-shokai" style="text-align:right">—</td>
+          </tr>
+          <tr>
+            <td>回数券売上</td>
+            <td style="text-align:right; font-size:11px; color:var(--text-muted);" id="sim-ticket-detail">—</td>
+            <td class="income" id="sim-ticket-rev" style="text-align:right">—</td>
+          </tr>
+          <tr>
+            <td>都度払い売上</td>
+            <td style="text-align:right; font-size:11px; color:var(--text-muted);" id="sim-ittoku-detail">—</td>
+            <td class="income" id="sim-ittoku" style="text-align:right">—</td>
+          </tr>
+          <tr class="subtotal">
+            <td>合計</td>
+            <td></td>
+            <td id="sim-total" style="text-align:right">—</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB3: 財務試算 ═══════════════ -->
+<div id="tab3" class="tab-content">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">独立判断ライン達成時の月間収支</div>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">※ 月売上 ¥400,000 達成時の試算（独立後・専業）</p>
+      <table class="finance-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th style="text-align:right">金額</th>
+            <th style="text-align:right">備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3" style="color:var(--teal); font-size:11px; padding-top:14px; padding-bottom:6px; font-weight:700;">【収入】</td></tr>
+          <tr><td>整体院 売上</td><td class="income" style="text-align:right">¥400,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">独立判断ライン</td></tr>
+          <tr class="subtotal"><td>総収入</td><td style="text-align:right">¥400,000</td><td></td></tr>
+
+          <tr><td colspan="3" style="color:#e74c3c; font-size:11px; padding-top:14px; padding-bottom:6px; font-weight:700;">【固定費】</td></tr>
+          <tr><td>家賃（テナント）</td><td class="expense" style="text-align:right">▲¥55,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;"></td></tr>
+          <tr><td>水道光熱費</td><td class="expense" style="text-align:right">▲¥8,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;"></td></tr>
+          <tr><td>通信費</td><td class="expense" style="text-align:right">▲¥5,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;"></td></tr>
+          <tr><td>システム・ツール費</td><td class="expense" style="text-align:right">▲¥12,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">予約・会計等</td></tr>
+          <tr><td>広告費</td><td class="expense" style="text-align:right">▲¥30,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">Google広告等</td></tr>
+          <tr><td>消耗品・タオル等</td><td class="expense" style="text-align:right">▲¥8,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;"></td></tr>
+          <tr class="subtotal"><td>固定費 合計</td><td style="text-align:right">▲¥118,000</td><td></td></tr>
+
+          <tr><td colspan="3" style="color:#f39c12; font-size:11px; padding-top:14px; padding-bottom:6px; font-weight:700;">【税・社会保険】</td></tr>
+          <tr><td>国民健康保険（推計）</td><td class="expense" style="text-align:right">▲¥26,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">年収換算</td></tr>
+          <tr><td>国民年金</td><td class="expense" style="text-align:right">▲¥16,980</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">2025年度額</td></tr>
+          <tr><td>所得税（推計）</td><td class="expense" style="text-align:right">▲¥14,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">青色申告控除後</td></tr>
+          <tr><td>住民税（推計）</td><td class="expense" style="text-align:right">▲¥18,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">10%概算</td></tr>
+          <tr><td>個人事業税（推計）</td><td class="expense" style="text-align:right">▲¥4,500</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">あん摩等 5%</td></tr>
+          <tr class="subtotal"><td>税・保険 合計</td><td style="text-align:right">▲¥79,480</td><td></td></tr>
+
+          <tr><td colspan="3" style="color:var(--text-muted); font-size:11px; padding-top:14px; padding-bottom:6px; font-weight:700;">【生活費】</td></tr>
+          <tr><td>生活費（推計）</td><td class="expense" style="text-align:right">▲¥150,000</td><td style="text-align:right; color:var(--text-muted); font-size:11px;">食費・交通費等</td></tr>
+          <tr class="subtotal"><td>生活費 合計</td><td style="text-align:right">▲¥150,000</td><td></td></tr>
+
+          <tr class="total">
+            <td>💰 月間手残り（貯蓄・再投資）</td>
+            <td style="text-align:right; color: var(--teal)">¥52,520</td>
+            <td style="text-align:right; font-size:11px; color:var(--text-secondary)">+ 年間¥630,240</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">安定目標達成時（月売上¥60万）</div>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">※ ¥600,000 / 月 時の手残り試算</p>
+        <table class="finance-table">
+          <tbody>
+            <tr><td>総収入</td><td class="income" style="text-align:right">¥600,000</td><td></td></tr>
+            <tr><td>固定費合計</td><td class="expense" style="text-align:right">▲¥118,000</td><td></td></tr>
+            <tr><td>税・保険合計（推計）</td><td class="expense" style="text-align:right">▲¥135,000</td><td></td></tr>
+            <tr><td>生活費</td><td class="expense" style="text-align:right">▲¥150,000</td><td></td></tr>
+            <tr class="total">
+              <td>月間手残り</td>
+              <td style="text-align:right; color: var(--success)">¥197,000</td>
+              <td style="text-align:right; font-size:11px; color:var(--text-secondary)">年間¥2.36M</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">継続患者数別 必要新規患者数</div>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">※ 独立判断ライン¥40万達成に必要な新規患者数</p>
+        <table class="patient-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">継続患者数</th>
+              <th>継続コース収入</th>
+              <th>新規必要収入</th>
+              <th>必要新規数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10人</td><td>¥49,800</td><td>¥350,200</td><td>46人</td></tr>
+            <tr><td>15人</td><td>¥74,700</td><td>¥325,300</td><td>43人</td></tr>
+            <tr><td>20人</td><td>¥99,600</td><td>¥300,400</td><td>40人</td></tr>
+            <tr class="highlight-row"><td>25人（推奨）</td><td>¥124,500</td><td>¥275,500</td><td>36人</td></tr>
+            <tr><td>30人</td><td>¥149,400</td><td>¥250,600</td><td>33人</td></tr>
+            <tr><td>40人</td><td>¥199,200</td><td>¥200,800</td><td>26人</td></tr>
+            <tr><td>50人</td><td>¥249,000</td><td>¥151,000</td><td>20人</td></tr>
+          </tbody>
+        </table>
+        <p class="tooltip-hint" style="margin-top:8px;">継続コース¥4,980/月、新規初回¥7,700として計算</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB4: チェックリスト ═══════════════ -->
+<div id="tab4" class="tab-content">
+  <div class="check-summary">
+    <div class="check-sum-item s-done"><div class="num">4</div><div class="lbl">✓ 達成済み</div></div>
+    <div class="check-sum-item s-prog"><div class="num">3</div><div class="lbl">△ 進行中</div></div>
+    <div class="check-sum-item s-todo"><div class="num">2</div><div class="lbl">✗ 未着手</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="check-section">
+        <div class="check-section-title">💴 財務条件（5項目）</div>
+        <div class="check-items">
+          <div class="check-item done">
+            <div class="check-icon">✓</div>
+            <div class="check-text">
+              <div class="check-title">生活防衛資金の確保</div>
+              <div class="check-desc">¥600,000 確保済み（目標¥600,000）</div>
+            </div>
+            <span class="check-badge">達成済み</span>
+          </div>
+          <div class="check-item progress">
+            <div class="check-icon">△</div>
+            <div class="check-text">
+              <div class="check-title">独立判断ライン2ヶ月連続達成</div>
+              <div class="check-desc">現在¥28万 → 目標¥40万（¥12万不足）</div>
+            </div>
+            <span class="check-badge">進行中</span>
+          </div>
+          <div class="check-item done">
+            <div class="check-icon">✓</div>
+            <div class="check-text">
+              <div class="check-title">青色申告の準備・帳簿管理開始</div>
+              <div class="check-desc">freee / マネーフォワード導入済み</div>
+            </div>
+            <span class="check-badge">達成済み</span>
+          </div>
+          <div class="check-item todo">
+            <div class="check-icon">✗</div>
+            <div class="check-text">
+              <div class="check-title">開業届・個人事業税の申請準備</div>
+              <div class="check-desc">独立前に税務署への届け出が必要</div>
+            </div>
+            <span class="check-badge">未着手</span>
+          </div>
+          <div class="check-item progress">
+            <div class="check-icon">△</div>
+            <div class="check-text">
+              <div class="check-title">設備投資費用の積立</div>
+              <div class="check-desc">施術ベッド・備品更新費 ¥30万目標（現在¥18万）</div>
+            </div>
+            <span class="check-badge">進行中</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="check-section">
+        <div class="check-section-title">📣 集客・運営条件（4項目）</div>
+        <div class="check-items">
+          <div class="check-item done">
+            <div class="check-icon">✓</div>
+            <div class="check-text">
+              <div class="check-title">Googleクチコミ30件以上・☆4.5以上</div>
+              <div class="check-desc">現在31件・平均☆4.8　達成！</div>
+            </div>
+            <span class="check-badge">達成済み</span>
+          </div>
+          <div class="check-item done">
+            <div class="check-icon">✓</div>
+            <div class="check-text">
+              <div class="check-title">継続コース患者10人以上の確保</div>
+              <div class="check-desc">現在15人確保済み（月¥74,700の安定収入）</div>
+            </div>
+            <span class="check-badge">達成済み</span>
+          </div>
+          <div class="check-item progress">
+            <div class="check-icon">△</div>
+            <div class="check-text">
+              <div class="check-title">Google広告の運用開始と費用対効果確認</div>
+              <div class="check-desc">設定準備中 → CPA¥3,000以下を確認してから独立判断</div>
+            </div>
+            <span class="check-badge">進行中</span>
+          </div>
+          <div class="check-item todo">
+            <div class="check-icon">✗</div>
+            <div class="check-text">
+              <div class="check-title">1ヶ月の集客予約を前月中に埋める体制</div>
+              <div class="check-desc">予約管理システムの整備・リマインド自動化</div>
+            </div>
+            <span class="check-badge">未着手</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB5: ロードマップ ═══════════════ -->
+<div id="tab5" class="tab-content">
+  <div class="roadmap-progress">
+    <div class="prog-title">
+      <span>全体進捗</span>
+      <span style="color:var(--teal)">独立まで 約4ヶ月（2026年3月 目標）</span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" style="width:38%"></div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot reached"><span></span>開始</div>
+      <div class="milestone-dot reached"><span></span>¥20万達成</div>
+      <div class="milestone-dot reached"><span></span>¥28万（現在）</div>
+      <div class="milestone-dot"><span></span>¥40万達成</div>
+      <div class="milestone-dot"><span></span>独立</div>
+      <div class="milestone-dot"><span></span>¥60万安定</div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-phases">
+      <div class="phase-item">
+        <div class="phase-dot done"></div>
+        <div class="phase-card">
+          <div class="phase-num">PHASE 01</div>
+          <div class="phase-status status-done">✓ 完了</div>
+          <div class="phase-name">準備期</div>
+          <div class="phase-period">〜2025年8月</div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-label">月売上</div><div class="kpi-value">¥15万〜</div></div>
+            <div class="kpi-item"><div class="kpi-label">クチコミ</div><div class="kpi-value">20件以上</div></div>
+            <div class="kpi-item"><div class="kpi-label">施術技術</div><div class="kpi-value">腰痛特化確立</div></div>
+            <div class="kpi-item"><div class="kpi-label">生活防衛資金</div><div class="kpi-value">¥60万確保</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-dot current"></div>
+        <div class="phase-card current-phase">
+          <div class="phase-num">PHASE 02</div>
+          <div class="phase-status status-current">▶ 現在地</div>
+          <div class="phase-name">検証期</div>
+          <div class="phase-period">2025年9月〜11月</div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-label">月売上</div><div class="kpi-value">¥28万→¥35万</div></div>
+            <div class="kpi-item"><div class="kpi-label">広告開始</div><div class="kpi-value">Google広告</div></div>
+            <div class="kpi-item"><div class="kpi-label">継続患者</div><div class="kpi-value">15人→25人</div></div>
+            <div class="kpi-item"><div class="kpi-label">CPA確認</div><div class="kpi-value">¥3,000以下</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-dot upcoming"></div>
+        <div class="phase-card">
+          <div class="phase-num">PHASE 03</div>
+          <div class="phase-status status-upcoming">⏳ 次フェーズ</div>
+          <div class="phase-name">判断期</div>
+          <div class="phase-period">2025年12月〜2026年1月</div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-label">月売上</div><div class="kpi-value">¥40万×2ヶ月</div></div>
+            <div class="kpi-item"><div class="kpi-label">新規患者</div><div class="kpi-value">月20人以上</div></div>
+            <div class="kpi-item"><div class="kpi-label">予約充足率</div><div class="kpi-value">80%以上</div></div>
+            <div class="kpi-item"><div class="kpi-label">独立決断</div><div class="kpi-value">2026年2月末退職</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-dot upcoming"></div>
+        <div class="phase-card">
+          <div class="phase-num">PHASE 04</div>
+          <div class="phase-status status-upcoming">⏳ 予定</div>
+          <div class="phase-name">独立期</div>
+          <div class="phase-period">2026年3月〜5月</div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-label">月売上</div><div class="kpi-value">¥40万〜¥50万</div></div>
+            <div class="kpi-item"><div class="kpi-label">稼働日数</div><div class="kpi-value">週5日フル稼働</div></div>
+            <div class="kpi-item"><div class="kpi-label">広告費</div><div class="kpi-value">月¥3万→¥5万</div></div>
+            <div class="kpi-item"><div class="kpi-label">クチコミ</div><div class="kpi-value">60件以上</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-dot upcoming"></div>
+        <div class="phase-card">
+          <div class="phase-num">PHASE 05</div>
+          <div class="phase-status status-upcoming">⏳ 未来</div>
+          <div class="phase-name">最適化期</div>
+          <div class="phase-period">2026年6月〜</div>
+          <div class="kpi-list">
+            <div class="kpi-item"><div class="kpi-label">月売上</div><div class="kpi-value">¥60万安定</div></div>
+            <div class="kpi-item"><div class="kpi-label">継続患者</div><div class="kpi-value">50人以上</div></div>
+            <div class="kpi-item"><div class="kpi-label">口コミ</div><div class="kpi-value">100件・☆4.8</div></div>
+            <div class="kpi-item"><div class="kpi-label">次展開</div><div class="kpi-value">スタッフ採用 or 2院目</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px;" class="card">
+    <div class="card-title">フェーズ別 重点アクション</div>
+    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; font-size:12px;">
+      <div style="padding:14px; background:var(--glass); border-radius:10px; border: 1px solid var(--border);">
+        <div style="color:var(--teal); font-weight:700; margin-bottom:8px;">📣 今すぐやること（検証期）</div>
+        <div style="color:var(--text-secondary); line-height:1.8;">
+          ・Google広告の開設<br>
+          ・継続コースを25人まで拡大<br>
+          ・Instagram週3投稿開始<br>
+          ・クチコミ依頼フロー確立
+        </div>
+      </div>
+      <div style="padding:14px; background:var(--glass); border-radius:10px; border: 1px solid var(--border);">
+        <div style="color:var(--warning); font-weight:700; margin-bottom:8px;">🎯 判断期に確認すること</div>
+        <div style="color:var(--text-secondary); line-height:1.8;">
+          ・¥40万×2ヶ月の達成確認<br>
+          ・CPA¥3,000以下の確認<br>
+          ・退職スケジュール調整<br>
+          ・開業届の準備
+        </div>
+      </div>
+      <div style="padding:14px; background:var(--glass); border-radius:10px; border: 1px solid var(--border);">
+        <div style="color:var(--success); font-weight:700; margin-bottom:8px;">🚀 独立後に強化すること</div>
+        <div style="color:var(--text-secondary); line-height:1.8;">
+          ・広告費を売上の8〜10%に設定<br>
+          ・紹介プログラムの導入<br>
+          ・物販（ストレッチグッズ等）<br>
+          ・オンライン相談の追加
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── TAB SWITCHING ──
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── TASK TOGGLE ──
+  function toggleTask(el) {
+    el.classList.toggle('done');
+  }
+
+  // ── SIMULATOR ──
+  const PRICE_SHOKAI  = 2980;   // 初回
+  const PRICE_TICKET  = 60000;  // 回数券（10回）
+  const PRICE_ITTOKU  = 7000;   // 都度払い
+  const TARGET_LINE   = 400000;
+  const GOAL_LINE     = 600000;
+
+  function fmt(n) {
+    return '¥' + Math.round(n).toLocaleString();
+  }
+
+  function updateSim() {
+    const days   = parseInt(document.getElementById('s-days').value);
+    const shokai = parseInt(document.getElementById('s-shokai').value);
+    const ticket = parseInt(document.getElementById('s-ticket').value);
+    const ittoku = parseInt(document.getElementById('s-ittoku').value);
+
+    document.getElementById('v-days').textContent   = days   + '日';
+    document.getElementById('v-shokai').textContent = shokai + '人';
+    document.getElementById('v-ticket').textContent = ticket + '人';
+    document.getElementById('v-ittoku').textContent = ittoku + '人';
+
+    const shokaiRev = shokai * PRICE_SHOKAI;
+    const ticketRev = ticket * PRICE_TICKET;
+    const ittokuRev = ittoku * PRICE_ITTOKU;
+    const total     = shokaiRev + ticketRev + ittokuRev;
+
+    const totalPatients = shokai + ticket + ittoku;
+    const avgPrice = totalPatients > 0 ? Math.round(total / totalPatients) : 0;
+
+    document.getElementById('b-total-patients').textContent = totalPatients + '人';
+    document.getElementById('b-days').textContent           = days + '日';
+    document.getElementById('b-avg').textContent            = '¥' + avgPrice.toLocaleString();
+
+    document.getElementById('sim-result').textContent = fmt(total);
+
+    const diff = total - TARGET_LINE;
+    const diffEl = document.getElementById('sim-diff');
+    if (diff >= 0) {
+      diffEl.textContent = '独立判断ライン達成！ ＋' + fmt(diff) + ' 超過';
+      diffEl.style.color = 'var(--success)';
+    } else {
+      diffEl.textContent = '独立判断ライン（¥40万）まで ' + fmt(Math.abs(diff)) + ' 不足';
+      diffEl.style.color = 'var(--text-secondary)';
+    }
+
+    // Bars (max = 600000)
+    const simPct = Math.min(100, (total / GOAL_LINE) * 100);
+    document.getElementById('bar-sim').style.width        = simPct + '%';
+    document.getElementById('bar-sim-label').textContent  = fmt(total);
+
+    // Breakdown detail
+    document.getElementById('sim-shokai-detail').textContent  = '¥2,980 × ' + shokai + '人';
+    document.getElementById('sim-ticket-detail').textContent  = '¥60,000 × ' + ticket + '人';
+    document.getElementById('sim-ittoku-detail').textContent  = '¥7,000 × ' + ittoku + '人';
+
+    document.getElementById('sim-shokai').textContent     = fmt(shokaiRev);
+    document.getElementById('sim-ticket-rev').textContent = fmt(ticketRev);
+    document.getElementById('sim-ittoku').textContent     = fmt(ittokuRev);
+    document.getElementById('sim-total').textContent      = fmt(total);
+  }
+
+  // Init
+  updateSim();
+</script>
+</body>
+</html>
